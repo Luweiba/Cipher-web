@@ -1,0 +1,121 @@
+{% extends "base" %}
+
+{% block content %}
+<div style="padding:10px;">
+  <div class="panel radius">
+    <p>{{name}}</p>
+  </div>
+
+
+    <input type="text" id="algorithm" name="algorithm" value="{{name}}" style="display: none" />
+  <fieldset>
+    <legend>输入</legend>
+
+    <div class="row">
+      <div class="medium-3 columns">
+        <div class="row collapse prefix-radius">
+          <div class="small-3 columns">
+            <span class="prefix">Mode</span>
+          </div>
+          <div class="small-9 columns">
+            <select id="mode" name="mode">
+                <option>ECB</option>
+                <option>CBC</option>
+                <option>CFB</option>
+                <option>OFB</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="medium-3 columns">
+        <div class="row collapse prefix-radius">
+          <div class="small-3 columns">
+            <span class="prefix">IV</span>
+          </div>
+          <div class="small-9 columns">
+            <input type="number" id="iv" name="iv" placeholder="初始向量">
+          </div>
+        </div>
+      </div>
+      <div class="medium-3 columns">
+        <div class="row collapse prefix-radius">
+          <div class="small-3 columns">
+            <span class="prefix">Key</span>
+          </div>
+          <div class="small-9 columns">
+            <input type="number" id="key" name="key" placeholder="密钥">
+          </div>
+        </div>
+      </div>
+      <div class="medium-3 columns">
+        <div class="row collapse prefix-radius">
+          <div class="small-5 columns">
+            <span class="prefix">Padding</span>
+          </div>
+          <div class="small-7 columns">
+            <select id="padding" name="padding">
+                <option>Pkcs7</option>
+                <option>AnsiX923</option>
+                <option>Iso7816</option>
+                <option>NoPadding</option>
+                <option>ZeroPadding</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label>Input
+    <textarea rows="4" id="message" name="message" placeholder="密文"></textarea>
+    </label>
+</fieldset>
+<div class="row">
+        <div class="medium-6 columns">
+            <button id="encrypt" type="submit" class="button round small">加密</button>
+        </div>
+        <div class="medium-6 columns">
+            <button id="decrypt" type="submit" class="button round small">解密</button>
+        </div>
+    </div>
+    <hr />
+
+<label>Output
+    <textarea rows="4" placeholder="明文" id="ans"></textarea>
+</label>
+</div>
+<script>
+$(document).ready(function(){
+    $("#encrypt").click(function(){
+        $.post("/encrypt", {
+            "algorithm": $("#algorithm").attr("value"),
+            "mode": $("#mode").val(),
+            "iv": $("#iv").val(),
+            "key": $("#key").val(),
+            "padding": $("#padding").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    });
+    $("#decrypt").click(function(){
+        $.post("/decrypt", {
+            "algorithm": $("#algorithm").attr("value"),
+            "mode": $("#mode").val(),
+            "iv": $("#iv").val(),
+            "key": $("#key").val(),
+            "padding": $("#padding").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    })
+});
+</script>
+{% endblock content %}

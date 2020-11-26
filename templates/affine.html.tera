@@ -1,0 +1,131 @@
+{% extends "base" %}
+
+        {% block content %}
+<div style="padding:10px;">
+    <div class="panel radius">
+        <p>仿射加密</p>
+    </div>
+    <fieldset>
+        <legend>输入</legend>
+
+        <div class="row">
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-6 columns">
+                        <span class="prefix">乘系数a(数字)</span>
+                    </div>
+                    <div class="small-6 columns">
+                        <input id="number_a" type="number" step="1" min="1" max="100" value="1"/>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-8 columns">
+                        <span class="prefix">乘系数a(大写字母)</span>
+                    </div>
+                    <div class="small-4 columns">
+                        <input id="upper_a" type="number" step="1" min="1" max="100" value="1"/>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-8 columns">
+                        <span class="prefix">乘系数a(小写字母)</span>
+                    </div>
+                    <div class="small-4 columns">
+                        <input id="lower_a" type="number" step="1" min="1" max="100" value="1"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-6 columns">
+                        <span class="prefix">加系数b(数字)</span>
+                    </div>
+                    <div class="small-6 columns">
+                        <input id="number_b" type="number" step="1" min="0" max="100" value="0"/>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-8 columns">
+                        <span class="prefix">加系数b(大写字母)</span>
+                    </div>
+                    <div class="small-4 columns">
+                        <input id="upper_b" type="number" step="1" min="0" max="100" value="0"/>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-8 columns">
+                        <span class="prefix">加系数b(小写字母)</span>
+                    </div>
+                    <div class="small-4 columns">
+                        <input id="lower_b" type="number" step="1" min="0" max="100" value="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <label>Input
+            <textarea rows="4" id="message" name="message" placeholder="加/解密输入"></textarea>
+        </label>
+    </fieldset>
+    <div class="row">
+        <div class="medium-6 columns">
+            <button id="encrypt" type="submit" class="button round small">加密</button>
+        </div>
+        <div class="medium-6 columns">
+            <button id="decrypt" type="submit" class="button round small">解密</button>
+        </div>
+    </div>
+    <hr />
+
+    <label>Output
+        <textarea rows="4" placeholder="加/解密结果" id="ans"></textarea>
+    </label>
+</div>
+<script>
+$(document).ready(function(){
+    $("#encrypt").click(function(){
+        $.post("/affine_encrypt", {
+            "lower_a": $("#lower_a").val(),
+            "lower_b": $("#lower_b").val(),
+            "upper_a": $("#upper_a").val(),
+            "upper_b": $("#upper_b").val(),
+            "number_a": $("#number_a").val(),
+            "number_b": $("#number_b").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    });
+    $("#decrypt").click(function(){
+        $.post("/affine_decrypt", {
+            "lower_a": $("#lower_a").val(),
+            "lower_b": $("#lower_b").val(),
+            "upper_a": $("#upper_a").val(),
+            "upper_b": $("#upper_b").val(),
+            "number_a": $("#number_a").val(),
+            "number_b": $("#number_b").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    })
+});
+</script>
+        {% endblock content %}

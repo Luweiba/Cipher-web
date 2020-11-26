@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c8c2fa5f-5eb7-4e81-8069-97ca191a989f" name="Default Changelist" comment="first">
+      <change afterPath="$PROJECT_DIR$/.idea/cipher-web-rocket.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cipher_type.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/form.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/handle.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lfsr_jk.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rc4.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/affine.html.tera" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/d_h.html.tera" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/lfsr_jk.html.tera" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/rc4.html.tera" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/sha3_256.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="ckhxifki" />
+  </component>
+  <component name="ProjectId" id="1jdOK5XMgeOM2Mexa3DISNflqdL" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../rsfile/exp" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+    <property name="org.rust.disableDetachedFileInspectionD:/rsprojects/cipher-web-rocket/src/form.rs" value="true" />
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+    <option name="version" value="2" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c8c2fa5f-5eb7-4e81-8069-97ca191a989f" name="Default Changelist" comment="" />
+      <created>1604130440844</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604130440844</updated>
+      <workItem from="1604130446826" duration="17353000" />
+      <workItem from="1604161543373" duration="7114000" />
+      <workItem from="1604192769150" duration="5891000" />
+      <workItem from="1604299445586" duration="319000" />
+      <workItem from="1604368374758" duration="2706000" />
+      <workItem from="1604480042758" duration="20000" />
+      <workItem from="1604503777757" duration="3783000" />
+      <workItem from="1604541776784" duration="5268000" />
+      <workItem from="1604558454048" duration="713000" />
+      <workItem from="1604576260870" duration="1376000" />
+      <workItem from="1604628695095" duration="210000" />
+      <workItem from="1604973819099" duration="1028000" />
+      <workItem from="1604996295764" duration="63000" />
+      <workItem from="1604996889066" duration="6000" />
+      <workItem from="1605015744110" duration="65000" />
+      <workItem from="1605093040600" duration="219000" />
+      <workItem from="1605108071385" duration="998000" />
+      <workItem from="1605190343025" duration="49000" />
+      <workItem from="1605775855640" duration="3027000" />
+      <workItem from="1605782179790" duration="10046000" />
+      <workItem from="1605793204468" duration="558000" />
+      <workItem from="1605837781944" duration="9647000" />
+      <workItem from="1605868199656" duration="29000" />
+      <workItem from="1605921322486" duration="7345000" />
+      <workItem from="1605946360592" duration="13075000" />
+      <workItem from="1606010214762" duration="42000" />
+      <workItem from="1606115284695" duration="5479000" />
+      <workItem from="1606176407737" duration="90000" />
+      <workItem from="1606185986839" duration="675000" />
+      <workItem from="1606199744113" duration="85000" />
+      <workItem from="1606291787580" duration="1217000" />
+      <workItem from="1606293077735" duration="13000" />
+      <workItem from="1606293993959" duration="547000" />
+      <workItem from="1606297316770" duration="116000" />
+      <workItem from="1606302913178" duration="61000" />
+      <workItem from="1606306301580" duration="79000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="first" />
+    <option name="LAST_COMMIT_MESSAGE" value="first" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="361" y="56" key="#Plugins" timestamp="1605782202003">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="56" key="#Plugins/0.0.1536.824@0.0.1536.824" timestamp="1605782202003" />
+    <state x="497" y="213" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604369092289">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="497" y="213" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1604369092289" />
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1606306378195">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606306378195" />
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1605787841278">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1605787841278" />
+    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1605787841277">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1605787841277" />
+    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1605787841277">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1605787841277" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1605787841278">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1605787841278" />
+    <state width="498" height="446" key="SwitcherDM" timestamp="1604163604425">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="498" height="446" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1604163604425" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1606306331225">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606306331225" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1605093086261">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1605093086261" />
+    <state x="430" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605961009204">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="430" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1605961009204" />
+  </component>
+</project>

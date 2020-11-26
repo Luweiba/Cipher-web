@@ -1,0 +1,105 @@
+{% extends "base" %}
+
+        {% block content %}
+<div style="padding:10px;">
+    <div class="panel radius">
+        <p>LFSR+JK</p>
+    </div>
+    <fieldset>
+        <legend>输入</legend>
+
+        <div class="row">
+            <div class="medium-3 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-4 columns">
+                        <span class="prefix">J</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input id="j_state" type="number" min="0" value="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="medium-3 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-4 columns">
+                        <span class="prefix">J_c</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input id="j_state_c" type="number" min="0" value="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="medium-3 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-4 columns">
+                        <span class="prefix">K</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input id="k_state" type="number" min="0" value="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="medium-3 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-4 columns">
+                        <span class="prefix">K_c</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input id="k_state_c" type="number" min="0" value="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+        <div class="medium-2 columns">
+            <button id="encrypt" type="submit" class="button small">加密</button>
+        </div>
+        <div class="medium-2 columns">
+            <button id="decrypt" type="submit" class="button small">解密</button>
+        </div>
+        </div>
+        <label>Input
+            <textarea rows="4" id="message" name="message" placeholder="加/解密输入"></textarea>
+        </label>
+    </fieldset>
+    <hr />
+
+    <label>Output
+        <textarea rows="4" placeholder="加/解密结果" id="ans"></textarea>
+    </label>
+</div>
+<script>
+$(document).ready(function(){
+    $("#encrypt").click(function(){
+        $.post("/lfsr_jk/encrypt", {
+            "j_state": $("#j_state").val(),
+            "k_state": $("#k_state").val(),
+            "j_state_c": $("#j_state_c").val(),
+            "k_state_c": $("#k_state_c").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    });
+    $("#decrypt").click(function(){
+        $.post("/lfsr_jk/decrypt", {
+            "j_state": $("#j_state").val(),
+            "k_state": $("#k_state").val(),
+            "j_state_c": $("#j_state_c").val(),
+            "k_state_c": $("#k_state_c").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    })
+});
+</script>
+        {% endblock content %}

@@ -1,0 +1,164 @@
+{% extends "base" %}
+        {% block content %}
+<div style="padding:10px;">
+    <div class="panel radius">
+        <p>Diffie-Hellman协议</p>
+    </div>
+
+    <div class="row">
+    <div class="medium-6 columns">
+
+    <fieldset>
+        <legend>客户端</legend>
+        <div class="row">
+            <div class="medium-6 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">P</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" id="p" placeholder="Prime" />
+                    </div>
+                </div>
+            </div>
+            <div class="medium-6 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">G</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" id="g" placeholder="本原根" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row collapse prefix-radius">
+            <div class="small-5 columns">
+                <span class="prefix">随机数A</span>
+            </div>
+            <div class="small-7 columns">
+                <input type="text" id="A" placeholder="Random A" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="medium-6 columns">
+                <button id="client_generate" class="small expand">快速生成</button>
+            </div>
+            <div class="medium-6 columns">
+                <button id="client_send" class="small expand">发送</button>
+            </div>
+        </div>
+        <div class="row collapse prefix-radius">
+            <div class="small-5 columns">
+                <span class="prefix">共享密匙</span>
+            </div>
+            <div class="small-7 columns">
+                <input type="text" id="client_shared_key" placeholder="Client Shared Key" />
+            </div>
+        </div>
+        <label>客户端通信记录</label>
+        <div id="client_buffer">
+        </div>
+    </fieldset>
+    </div>
+        <div class="medium-6 columns">
+
+            <fieldset>
+                <legend>服务端</legend>
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">随机数B</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" id="B" placeholder="Random B" />
+                    </div>
+                </div>
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">共享密匙</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" id="server_shared_key" placeholder="Server Shared Key" />
+                    </div>
+                </div>
+                <label>服务端通信记录</label>
+                <div id="server_buffer">
+
+                </div>
+            </fieldset>
+        </div>
+
+    <hr />
+    </div>
+</div>
+<script>
+function fast_mod(n, p, m) {
+    var power_b = new Array();
+    var p_tmp = p;
+    while (p_tmp != 0) {
+        power_b.push(p_tmp%2);
+        p_tmp /= 2;
+    }
+    var scale = n%m;
+    var ans = 1;
+    for(var i=0; i< power_b.length;i++) {
+        if (power_b[i] != 0) {
+            ans = (ans * scale) % m;
+        }
+        scale = (scale * scale) % m;
+    }
+    return ans;
+}
+$(document).ready(function(){
+    $("#client_send").click(function(){
+        var A = parseInt($("#A").val(), 10);
+        var p = parseInt($("#p").val(), 10);
+        var g = parseInt($("#g").val(), 10);
+        var Ya = fast_mod(g, A, p);
+        $("#client_buffer").append("<p><b>Client: </b>Ajax post data: p="+p.toString(10)+"; g="+g.toString(10)+"; Ya="+Ya.toString(10)+"</p>");
+        $.post("/handle_diffie_hellman", {
+            "p": p,
+            "g": g,
+            "Ya": Ya,
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                let len = data.length;
+                var k1 = data.indexOf("```");
+                var k2 = data.indexOf("&&&");
+                var Yb = parseInt(data.substr(0, k1), 10);
+                var server_shared_key = parseInt(data.substr(k1+3, k2), 10);
+                var B = parseInt(data.substr(k2+3, len), 10);
+                var shared_key = fast_mod(Yb, A, p);
+                $("#client_shared_key").val(shared_key);
+                $("#B").val(B);
+                $("#server_shared_key").val(server_shared_key);
+                $("#server_buffer").append("<p><b>Server: </b>Recv data: p="+p.toString(10)+"; g="+g.toString(10)+"; Ya="+Ya.toString(10)+"</p>");
+                $("#server_buffer").append("<p><b>Server: </b>Send data: Yb="+Yb.toString()+"</p>");
+                $("#client_buffer").append("<p><b>Client: </b>Recv data: Yb="+Yb.toString()+"</p>")
+            } else {
+                alert(data);
+            }
+        });
+    });
+    $("#client_generate").click(function(){
+        $.get("/handle_diffie_hellman_generate", {
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                let len = data.length;
+                var k1 = data.indexOf("```");
+                var k2 = data.indexOf("&&&");
+                var p = parseInt(data.substr(0, k1), 10);
+                var g = parseInt(data.substr(k1+3, k2), 10);
+                var A = parseInt(data.substr(k2+3, len), 10);
+                var Ya = fast_mod(g, A, p);
+                $("#g").val(g);
+                $("#A").val(A);
+                $("#p").val(p);
+            } else {
+                alert(data);
+            }
+        });
+    });
+});
+</script>
+        {% endblock content %}

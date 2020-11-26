@@ -1,0 +1,157 @@
+{% extends "base" %}
+
+{% block content %}
+<div style="padding:10px;">
+    <div class="panel radius">
+        <p>RSA生成公/私钥</p>
+    </div>
+
+    <fieldset>
+        <legend>公/私钥生成</legend>
+
+        <div class="row">
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">密钥长度</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <select id="length" name="length">
+                            <option>512bit</option>
+                            <option>1024bit</option>
+                            <option>2048bit</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-4 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">密钥格式</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <select id="mode" name="mode">
+                            <option>PKCS#8</option>
+                            <option>PKCS#1</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-4 columns">
+                <button id="generate" type="submit" class="button round small">生成密匙对</button>
+            </div>
+        </div>
+        <label>RSA加密公钥
+            <textarea rows="5" id="public_keys" name="public_keys"></textarea>
+        </label>
+        <label>RSA加密私钥
+            <textarea rows="5" id="private_keys" name="private_keys"></textarea>
+        </label>
+    </fieldset>
+    <hr />
+</div>
+
+
+<div style="padding:10px;">
+    <div class="panel radius">
+        <p>RSA加/解密</p>
+    </div>
+
+
+    <input type="text" id="algorithm" name="algorithm" value="{{name}}" style="display: none" />
+    <fieldset>
+        <legend>加/解密</legend>
+
+        <div class="row">
+            <div class="medium-6 columns">
+                <div class="row collapse prefix-radius">
+                    <div class="small-5 columns">
+                        <span class="prefix">填充标志</span>
+                    </div>
+                    <div class="small-7 columns">
+                        <select id="padding" name="padding">
+                            <option>PKCS1v15</option>
+                            <option>OAEP</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="medium-3 columns">
+                <button id="rsa_encrypt" type="submit" class="button small">RSA加密</button>
+            </div>
+            <div class="medium-3 columns">
+                <button id="rsa_decrypt" type="submit" class="button small">RSA解密</button>
+            </div>
+        </div>
+        <label>输入密钥（pem格式）
+            <textarea rows="4" id="keys" name="keys" placeholder="公钥/密钥（pem格式）"></textarea>
+        </label>
+        <label>待加密/解密内容
+            <textarea rows="4" id="message" name="message" placeholder="待加解密内容……"></textarea>
+        </label>
+    </fieldset>
+    <label>加密/解密结果
+        <textarea rows="4" placeholder="加密/解密结果……" id="ans"></textarea>
+    </label>
+</div>
+<script>
+$(document).ready(function(){
+    $("#rsa_encrypt").click(function(){
+        let mode = "";
+        if($("#keys").val().indexOf("RSA") == -1) {
+            mode = "pkcs8";
+        } else {
+            mode = "pkcs1";
+        }
+        $.post("/rsa/crypt/encrypt", {
+            "mode": mode,
+            "padding": $("#padding").val(),
+            "keys": $("#keys").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    });
+    $("#rsa_decrypt").click(function(){
+        let mode = "";
+        if($("#keys").val().indexOf("RSA") == -1) {
+            mode = "pkcs8";
+        } else {
+            mode = "pkcs1";
+        }
+        $.post("/rsa/crypt/decrypt", {
+            "mode": mode,
+            "padding": $("#padding").val(),
+            "keys": $("#keys").val(),
+            "message": $("#message").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                $("#ans").val(data);
+            } else {
+                alert(data);
+            }
+        });
+    });
+
+    $("#generate").click(function(){
+        $.post("/rsa_generate_keys", {
+            "mode": $("#mode").val(),
+            "length": $("#length").val(),
+        }, function(data) {
+            if(data.indexOf("Error") == -1) {
+                let len = data.length;
+                let k = data.indexOf("```");
+                $("#private_keys").val(data.substr(0, k));
+                $("#public_keys").val(data.substr(k+3, len));
+            } else {
+                alert(data);
+            }
+        });
+    });
+});
+</script>
+{% endblock content %}

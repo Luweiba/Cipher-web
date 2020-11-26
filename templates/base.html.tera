@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>密码学核心算法及协议综合服务系统</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=2">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+  <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+</head>
+<body>
+<div class="row">
+  <nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+      <!-- 如果你不需要标题或图标可以删掉它 -->
+      <h1><a href="/">Cryptography</a></h1>
+    </li>
+      <!-- 小屏幕上折叠按钮: 去掉 .menu-icon 类，可以去除图标。 
+      如果需要只显示图片，可以删除 "Menu" 文本 -->
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+
+  <section class="top-bar-section">
+    <ul class="right">
+      <li><a href="#"></a></li>
+    </ul>
+  </section>
+</nav>
+</div>
+<div class="row">
+  <div class="medium-2 columns" style="background-color:#f1f1f1;">
+    <ul class="side-nav">
+          <li id="des"><a href="/des">Des</a></li>
+          <li id="aes"><a href="/aes">Aes</a></li>
+          <li id="rsa"><a href="/rsa">Rsa</a></li>
+          <li id="dh"><a href="/diffie_hellman">Diffie-Hellman</a> </li>
+          <li id="rc4"><a href="/rc4">Rc4</a></li>
+          <li id="affine"><a href="/affine">Affine</a></li>
+          <li id="lfsr_jk"><a href="/lfsr_jk">LFSR-JK</a></li>
+    </ul>
+  </div>
+  <div class="medium-10 columns">
+    {% block content %}
+     
+    {% endblock content %}
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $("#{{name}}").attr("class", "active");
+    });
+</script>
+</body>
+</html>
