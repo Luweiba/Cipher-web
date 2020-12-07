@@ -188,6 +188,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "block-buffer"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4152116fd6e9dadb291ae18fc1ec3575ed6d84c29642d97890f4b4a3417297e4"
+dependencies = [
+ "block-padding 0.2.1",
+ "generic-array 0.14.4",
+]
+
+[[package]]
 name = "block-cipher-trait"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -276,6 +286,7 @@ dependencies = [
  "rsa",
  "serde",
  "serde_derive",
+ "sha3",
  "urldecode",
 ]
 
@@ -613,6 +624,12 @@ name = "itoa"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc6f3ad7b9d11a0c00842ff8de1b60ee58661048eb8049ed33c73594f359d7e6"
+
+[[package]]
+name = "keccak"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67c21572b4949434e4fc1e1978b99c5f77064153c59d998bf13ecd96fb5ecba7"
 
 [[package]]
 name = "kernel32-sys"
@@ -1231,7 +1248,7 @@ version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7d94d0bede923b3cea61f3f1ff57ff8cdfd77b400fb8f9998949e0cf04163df"
 dependencies = [
- "block-buffer",
+ "block-buffer 0.7.3",
  "digest 0.8.1",
  "fake-simd",
  "opaque-debug 0.2.3",
@@ -1243,10 +1260,22 @@ version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a256f46ea78a0c0d9ff00077504903ac881a1dafdc20da66545699e7776b3e69"
 dependencies = [
- "block-buffer",
+ "block-buffer 0.7.3",
  "digest 0.8.1",
  "fake-simd",
  "opaque-debug 0.2.3",
+]
+
+[[package]]
+name = "sha3"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f81199417d4e5de3f04b1e871023acea7389672c4135918f05aa9cbf2f2fa809"
+dependencies = [
+ "block-buffer 0.9.0",
+ "digest 0.9.0",
+ "keccak",
+ "opaque-debug 0.3.0",
 ]
 
 [[package]]

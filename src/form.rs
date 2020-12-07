@@ -67,9 +67,9 @@ impl<'v> FromFormValue<'v> for EncryptAlgorithm {
     type Error = &'static str;
 
     fn from_form_value(v: &'v RawStr) -> Result<Self, Self::Error> {
-        if v.contains("DES") {
+        if v.contains("des") {
             Ok(EncryptAlgorithm::DES)
-        } else if v.contains("AES") {
+        } else if v.contains("aes") {
             Ok(EncryptAlgorithm::AES)
         } else {
             Err("Wrong Algorithm")
@@ -106,9 +106,9 @@ pub struct RsaCryptItem<'r> {
 
 #[derive(FromForm, Debug)]
 pub struct DHItem<'r> {
-    pub p: &'r RawStr,
-    pub g: &'r RawStr,
-    pub Ya: &'r RawStr,
+    pub final_packet: &'r RawStr,
+    pub public_key: &'r RawStr,
+    pub mode: &'r RawStr,
 }
 
 #[derive(FromForm, Debug)]
@@ -134,4 +134,18 @@ pub struct LfsrJkItem<'r> {
     pub j_state_c: &'r RawStr,
     pub k_state_c: &'r RawStr,
     pub message: &'r RawStr,
+}
+#[derive(FromForm, Debug)]
+pub struct Sha3HashItem<'r> {
+    pub msg: &'r RawStr,
+}
+
+#[derive(FromForm, Debug)]
+pub struct SignatureItem<'r> {
+    pub p: &'r RawStr,
+    pub g: &'r RawStr,
+    pub Ya: &'r RawStr,
+    pub private_key: &'r RawStr,
+    pub mac: &'r RawStr,
+    pub mode: &'r RawStr,
 }

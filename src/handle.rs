@@ -6,7 +6,7 @@ use crate::form::*;
 use crate::cipher_type::*;
 use crate::rc4::*;
 use crate::lfsr_jk::LfsrJk;
-use rsa::{RSAPrivateKey, RSAPublicKey, PaddingScheme, PublicKeyPemEncoding};
+use rsa::{RSAPrivateKey, RSAPublicKey, PaddingScheme, PublicKeyPemEncoding, PublicKeyParts};
 use rsa::PublicKey;
 use rand::rngs::OsRng;
 use rsa::PrivateKeyPemEncoding;
@@ -16,6 +16,9 @@ use std::sync::{Arc, Mutex};
 use rocket::State;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use sha3::{Sha3_256, Digest};
+use sha3::digest::DynDigest;
+
 
 pub fn handle(encrypt_item: Form<EncryptItem>, flag: bool) -> Result<String, String> {
     if let Err(e) = encrypt_item.algorithm {
@@ -454,24 +457,77 @@ pub fn rsa_handle(rsa_crypt_item: Form<RsaCryptItem>, encrypt: bool) -> Result<S
 }
 
 pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
-    println!("recv: {:?}", dh_item);
-    let mut Ya: u32;
-    let mut p: u32;
-    let mut g: u32;
-    if let Ok(tmp) = dh_item.Ya.parse::<u32>() {
-        Ya = tmp;
-    } else {
-        return Err(format!("Error: Can't parse {} to Unsigned Integer", dh_item.Ya));
+    let public_key = url_decode(dh_item.public_key.to_string());
+    let final_packet = url_decode(dh_item.final_packet.to_string());
+    let der_encoded = public_key
+        .lines()
+        .filter(|line| !line.starts_with("-"))
+        .fold(String::new(), |mut data, line| {
+            data.push_str(&line);
+            data
+        });
+    let der_bytes = base64::decode(&der_encoded).unwrap();
+    let mut rng = OsRng;
+    let public_key = if dh_item.mode.contains("pkcs8") { RSAPublicKey::from_pkcs8(&der_bytes).unwrap() } else { RSAPublicKey::from_pkcs1(&der_bytes).unwrap() };
+    let mut raw_final_packet= String::new();
+    let mut signature = Vec::new();
+    for (i, data) in final_packet.split("|").enumerate() {
+        if i == 0 {
+            raw_final_packet = data.to_string();
+        } else {
+            signature = decode(data.to_string()).unwrap();
+        }
+        println!("{}: {}", i, data);
     }
-    if let Ok(tmp) = dh_item.p.parse::<u32>() {
-        p = tmp;
-    } else {
-        return Err(format!("Error: Can't parse {} to Unsigned Integer", dh_item.p));
+    let mut hasher = Sha3_256::new();
+    Digest::update(&mut hasher, raw_final_packet.as_bytes());
+    let raw_final_packet_result = hasher.finalize();
+    let raw_final_packet_result_slice = raw_final_packet_result.as_slice();
+    println!("Raw final packet: {:?}", raw_final_packet_result_slice);
+    if public_key.verify(PaddingScheme::new_pkcs1v15_sign(None), raw_final_packet_result_slice, &signature).is_err() {
+        return Err(format!("Error: Signature Verification Failed"));
     }
-    if let Ok(tmp) = dh_item.g.parse::<u32>() {
-        g = tmp;
-    } else {
-        return Err(format!("Error: Can't parse {} to Unsigned Integer", dh_item.g));
+    let mut Ya: u32 = 0;
+    let mut p: u32 = 0;
+    let mut g: u32 = 0;
+    let mut mac= String::new();
+    for (i, item) in raw_final_packet.split("`").enumerate() {
+        match i {
+            0 => {
+                if let Ok(tmp) = item.parse::<u32>() {
+                    p = tmp;
+                } else {
+                    return Err(format!("Error: Can't parse {} to Unsigned Integer", item));
+                }
+            },
+            1 => {
+                if let Ok(tmp) = item.parse::<u32>() {
+                    g = tmp;
+                } else {
+                    return Err(format!("Error: Can't parse {} to Unsigned Integer", item));
+                }
+            },
+            2 => {
+                if let Ok(tmp) = item.parse::<u32>() {
+                    Ya = tmp;
+                } else {
+                    return Err(format!("Error: Can't parse {} to Unsigned Integer", item));
+                }
+            },
+            3 => {
+                mac = item.to_string();
+            }
+            _ => { break; }
+        }
+    }
+    let mac = decode(mac).unwrap();
+    let mut hasher = Sha3_256::new();
+    Digest::update(&mut hasher, Ya.to_string().as_bytes());
+    let raw_mac_result = hasher.finalize();
+    let raw_mac_result_slice = raw_mac_result.as_slice();
+    let new_mac = Vec::from(raw_mac_result_slice);
+    if new_mac != mac {
+        return Err(format!("Error: Mac failed"));
     }
     let B = random::<u32>() % (p-1) + 1;
     let Yb = fast_mod(g, B, p);
@@ -838,4 +894,55 @@ pub fn handle_diffie_hellman_generate(primes: State<Mutex<Primes>>) -> Result<St
     let g = get_one_origin_primitive_root(&mut primes, p);
     let a = (random::<u32>() % (p-1)) + 1;
     Ok(format!("{}```{}&&&{}", p, g, a))
+}
+
+pub fn handle_sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String> {
+    let msg = sha3_hash_item.msg.to_string();
+    let mut hasher = Sha3_256::new();
+    Digest::update(&mut hasher, msg.as_bytes());
+    let result = hasher.finalize();
+    let result_slice = result.as_slice();
+    println!("{:?}", result_slice);
+    Ok(format!("{}", encode(result_slice)))
+}
+
+pub fn handle_signature(signature_item: Form<SignatureItem>) -> Result<String, String> {
+    let p;
+    let g;
+    let Ya;
+    let private_key = url_decode(signature_item.private_key.to_string());
+    let mac = url_decode(signature_item.mac.to_string());
+    if let Ok(tmp) = signature_item.p.parse::<u64>() {
+        p = tmp;
+    } else {
+        return Err(format!("Error: can't convert p to integer, your p is {}", signature_item.p));
+    }
+    if let Ok(tmp) = signature_item.g.parse::<u64>() {
+        g = tmp;
+    } else {
+        return Err(format!("Error: can't convert g to integer, your g is {}", signature_item.g));
+    }
+    if let Ok(tmp) = signature_item.Ya.parse::<u64>() {
+        Ya = tmp;
+    } else {
+        return Err(format!("Error: can't convert Ya to integer, your Ya is {}", signature_item.Ya));
+    }
+    let mut final_packet = format!("{}`{}`{}`{}", p, g, Ya, mac);
+    let mut hasher = Sha3_256::new();
+    Digest::update(&mut hasher, final_packet.as_bytes());
+    let result = hasher.finalize();
+    let result_slice = result.as_slice();
+    let mut rng = OsRng;
+    let der_encoded = private_key
+        .lines()
+        .filter(|line| !line.starts_with("-"))
+        .fold(String::new(), |mut data, line| {
+            data.push_str(&line);
+            data
+        });
+    let der_bytes = base64::decode(&der_encoded).unwrap();
+    let private_key = if signature_item.mode.contains("pkcs8") { RSAPrivateKey::from_pkcs8(&der_bytes).unwrap() } else { RSAPrivateKey::from_pkcs1(&der_bytes).unwrap() };
+    println!("Result_slice: {:?}", result_slice);
+    let signed_data = private_key.sign(PaddingScheme::new_pkcs1v15_sign(None), result_slice).unwrap();
+    Ok(encode(&signed_data))
 }

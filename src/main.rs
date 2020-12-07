@@ -77,7 +77,10 @@ fn affine_encrypt(affine_crypt_item: Form<AffineCryptItem>) -> Result<String, St
 fn affine_decrypt(affine_crypt_item: Form<AffineCryptItem>) -> Result<String, String> {
     affine_handle(affine_crypt_item, false)
 }
-
+#[post("/sha3", data="<sha3_hash_item>")]
+fn sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String> {
+    handle_sha3(sha3_hash_item)
+}
 #[post("/rsa/crypt/encrypt", data="<rsa_crypt_item>")]
 fn my_rsa_encrypt(rsa_crypt_item: Form<RsaCryptItem>) -> Result<String, String> {
     rsa_handle(rsa_crypt_item, true)
@@ -97,6 +100,10 @@ fn rc4_crypt(rc4_crypt_item: Form<Rc4CryptItem>) -> Result<String, String> {
 #[post("/lfsr_jk/encrypt", data = "<lfsr_jk_item>")]
 fn lfsr_jk_encrypt(lfsr_jk_item: Form<LfsrJkItem>) -> Result<String, String> {
     lfsr_jk_handle(lfsr_jk_item, true)
+}
+#[post("/signature", data = "<signature_item>")]
+fn signature(signature_item: Form<SignatureItem>) -> Result<String, String> {
+    handle_signature(signature_item)
 }
 #[post("/lfsr_jk/decrypt", data = "<lfsr_jk_item>")]
 fn lfsr_jk_decrypt(lfsr_jk_item: Form<LfsrJkItem>) -> Result<String, String> {
@@ -168,7 +175,7 @@ fn main() {
         .manage(Mutex::new(primes))
         .mount("/", routes![index, get, encrypt, decrypt, rsa_crypt, rsa_generate_keys, my_rsa_decrypt,
                                          my_rsa_encrypt, get_diffie_hellman, diffie_hellman, diffie_hellman_generate, get_affine, affine_decrypt,
-                                         affine_encrypt, get_rc4, rc4_crypt, get_lfsr_jk, lfsr_jk_decrypt, lfsr_jk_encrypt])
+                                         affine_encrypt, get_rc4, rc4_crypt, get_lfsr_jk, lfsr_jk_decrypt, lfsr_jk_encrypt, sha3, signature])
         .attach(Template::fairing())
         .register(catchers![not_found]).launch();
 }
