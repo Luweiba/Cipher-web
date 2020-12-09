@@ -1,7 +1,7 @@
+use aes::Aes128;
 use block_modes::block_padding::{AnsiX923, Iso7816, NoPadding, Pkcs7, ZeroPadding};
 use block_modes::{Cbc, Cfb, Ecb, Ofb};
 use des::Des;
-use aes::Aes128;
 
 pub type CbcDesPkcs7 = Cbc<Des, Pkcs7>;
 pub type EcbDesPkcs7 = Ecb<Des, Pkcs7>;
@@ -27,8 +27,6 @@ pub type CbcDesZeroPadding = Cbc<Des, ZeroPadding>;
 pub type EcbDesZeroPadding = Ecb<Des, ZeroPadding>;
 pub type CfbDesZeroPadding = Cfb<Des, ZeroPadding>;
 pub type OfbDesZeroPadding = Ofb<Des, ZeroPadding>;
-
-
 
 pub type CbcAes128Pkcs7 = Cbc<Aes128, Pkcs7>;
 pub type EcbAes128Pkcs7 = Ecb<Aes128, Pkcs7>;

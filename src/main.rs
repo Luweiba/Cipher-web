@@ -1,28 +1,30 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 #![allow(unused)]
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate rocket;
+#[macro_use]
+extern crate serde_derive;
+use rocket::request::Form;
+use rocket::response::Redirect;
+use rocket::{Request, State};
+use rocket_contrib::templates::Template;
 use std::collections::HashMap;
 use std::sync::Mutex;
-use rocket::{Request, State};
-use rocket::response::Redirect;
-use rocket_contrib::templates::Template;
-use rocket::request::Form;
 use std::thread;
 mod cipher_type;
 mod form;
 mod handle;
-mod rc4;
 mod lfsr_jk;
+mod rc4;
 use form::*;
 use handle::*;
-use rc4::*;
 use lfsr_jk::*;
+use rc4::*;
 
-use rsa::{RSAPrivateKey, RSAPublicKey, PaddingScheme, PublicKeyPemEncoding};
-use rsa::PublicKey;
 use rand::rngs::OsRng;
 use rsa::PrivateKeyPemEncoding;
+use rsa::PublicKey;
+use rsa::{PaddingScheme, PublicKeyPemEncoding, RSAPrivateKey, RSAPublicKey};
 #[derive(Serialize)]
 struct Context {
     name: String,
@@ -32,13 +34,15 @@ struct Context {
 fn index() -> Redirect {
     Redirect::to(uri!(get: crypto_name = "des"))
 }
-#[post("/encrypt", data="<encrypt_item>")]
+#[post("/encrypt", data = "<encrypt_item>")]
 fn encrypt(encrypt_item: Form<EncryptItem>) -> Result<String, String> {
     handle(encrypt_item, true)
 }
-#[post("/decrypt", data="<decrypt_item>")]
-fn decrypt(decrypt_item: Form<EncryptItem>) -> Result<String, String> { handle(decrypt_item, false) }
-#[post("/rsa_generate_keys", data="<rsa_keys_item>")]
+#[post("/decrypt", data = "<decrypt_item>")]
+fn decrypt(decrypt_item: Form<EncryptItem>) -> Result<String, String> {
+    handle(decrypt_item, false)
+}
+#[post("/rsa_generate_keys", data = "<rsa_keys_item>")]
 fn rsa_generate_keys(rsa_keys_item: Form<RsaKeysItem>) -> Result<String, String> {
     let mut length: usize = 512;
     if rsa_keys_item.length.contains("1024bit") {
@@ -69,23 +73,23 @@ fn rsa_generate_keys(rsa_keys_item: Form<RsaKeysItem>) -> Result<String, String>
         return Err("Error: Wrong Mode".to_string());
     }
 }
-#[post("/affine_encrypt", data="<affine_crypt_item>")]
+#[post("/affine_encrypt", data = "<affine_crypt_item>")]
 fn affine_encrypt(affine_crypt_item: Form<AffineCryptItem>) -> Result<String, String> {
     affine_handle(affine_crypt_item, true)
 }
-#[post("/affine_decrypt", data="<affine_crypt_item>")]
+#[post("/affine_decrypt", data = "<affine_crypt_item>")]
 fn affine_decrypt(affine_crypt_item: Form<AffineCryptItem>) -> Result<String, String> {
     affine_handle(affine_crypt_item, false)
 }
-#[post("/sha3", data="<sha3_hash_item>")]
+#[post("/sha3", data = "<sha3_hash_item>")]
 fn sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String> {
     handle_sha3(sha3_hash_item)
 }
-#[post("/rsa/crypt/encrypt", data="<rsa_crypt_item>")]
+#[post("/rsa/crypt/encrypt", data = "<rsa_crypt_item>")]
 fn my_rsa_encrypt(rsa_crypt_item: Form<RsaCryptItem>) -> Result<String, String> {
     rsa_handle(rsa_crypt_item, true)
 }
-#[post("/rsa/crypt/decrypt", data="<rsa_crypt_item>")]
+#[post("/rsa/crypt/decrypt", data = "<rsa_crypt_item>")]
 fn my_rsa_decrypt(rsa_crypt_item: Form<RsaCryptItem>) -> Result<String, String> {
     rsa_handle(rsa_crypt_item, false)
 }
@@ -93,7 +97,7 @@ fn my_rsa_decrypt(rsa_crypt_item: Form<RsaCryptItem>) -> Result<String, String> 
 fn diffie_hellman(dh_item: Form<DHItem>) -> Result<String, String> {
     dh_handle(dh_item)
 }
-#[post("/rc4/crypt", data="<rc4_crypt_item>")]
+#[post("/rc4/crypt", data = "<rc4_crypt_item>")]
 fn rc4_crypt(rc4_crypt_item: Form<Rc4CryptItem>) -> Result<String, String> {
     rc4_handle(rc4_crypt_item)
 }
@@ -121,7 +125,7 @@ fn get_diffie_hellman() -> Template {
     };
     Template::render("d_h", &context)
 }
-#[get("/<crypto_name>", rank=2)]
+#[get("/<crypto_name>", rank = 2)]
 fn get(crypto_name: String) -> Template {
     let context = Context {
         name: crypto_name.to_lowercase(),
@@ -173,9 +177,33 @@ fn main() {
     primes.update_primes(10000);
     rocket::ignite()
         .manage(Mutex::new(primes))
-        .mount("/", routes![index, get, encrypt, decrypt, rsa_crypt, rsa_generate_keys, my_rsa_decrypt,
-                                         my_rsa_encrypt, get_diffie_hellman, diffie_hellman, diffie_hellman_generate, get_affine, affine_decrypt,
-                                         affine_encrypt, get_rc4, rc4_crypt, get_lfsr_jk, lfsr_jk_decrypt, lfsr_jk_encrypt, sha3, signature])
+        .mount(
+            "/",
+            routes![
+                index,
+                get,
+                encrypt,
+                decrypt,
+                rsa_crypt,
+                rsa_generate_keys,
+                my_rsa_decrypt,
+                my_rsa_encrypt,
+                get_diffie_hellman,
+                diffie_hellman,
+                diffie_hellman_generate,
+                get_affine,
+                affine_decrypt,
+                affine_encrypt,
+                get_rc4,
+                rc4_crypt,
+                get_lfsr_jk,
+                lfsr_jk_decrypt,
+                lfsr_jk_encrypt,
+                sha3,
+                signature
+            ],
+        )
         .attach(Template::fairing())
-        .register(catchers![not_found]).launch();
+        .register(catchers![not_found])
+        .launch();
 }

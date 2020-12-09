@@ -18,7 +18,7 @@ impl Rc4 {
         rc4
     }
     pub fn init(&mut self) {
-        let mut k = vec![0u32;256];
+        let mut k = vec![0u32; 256];
         for i in 0..256 {
             self.s[i] = i as u32;
             k[i] = self.key[i % self.key.len()] as u32;

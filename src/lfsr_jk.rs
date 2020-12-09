@@ -24,7 +24,7 @@ impl LfsrJk {
         for i in 0..len {
             let j = Self::round(&mut j_state, self.j_state_c);
             let k = Self::round(&mut k_state, self.k_state_c);
-            data_state  = j ^ (!(j ^ k) & data_state);
+            data_state = j ^ (!(j ^ k) & data_state);
             data[i] ^= data_state;
         }
     }

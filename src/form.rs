@@ -1,7 +1,5 @@
-use rocket::request::{FromForm, FromFormValue};
 use rocket::http::RawStr;
-
-
+use rocket::request::{FromForm, FromFormValue};
 
 #[derive(Debug, Clone, Copy)]
 pub enum EncryptMode {
@@ -30,7 +28,7 @@ impl<'v> FromFormValue<'v> for EncryptMode {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub enum  EncryptPaddingMode {
+pub enum EncryptPaddingMode {
     Pkcs7,
     AnsiX923,
     Iso7816,
@@ -49,7 +47,7 @@ impl<'v> FromFormValue<'v> for EncryptPaddingMode {
             Ok(EncryptPaddingMode::Iso7816)
         } else if v.contains("NoPadding") {
             Ok(EncryptPaddingMode::NoPadding)
-        } else if v.contains("ZeroPadding"){
+        } else if v.contains("ZeroPadding") {
             Ok(EncryptPaddingMode::ZeroPadding)
         } else {
             Err("Not a Padding Mode")
@@ -77,10 +75,9 @@ impl<'v> FromFormValue<'v> for EncryptAlgorithm {
     }
 }
 
-
 #[derive(FromForm, Debug)]
-pub struct EncryptItem<'r>{
-    pub algorithm: Result<EncryptAlgorithm,&'static str>,
+pub struct EncryptItem<'r> {
+    pub algorithm: Result<EncryptAlgorithm, &'static str>,
     pub mode: Result<EncryptMode, &'static str>,
     pub padding: Result<EncryptPaddingMode, &'static str>,
     pub iv: &'r RawStr,
@@ -88,10 +85,8 @@ pub struct EncryptItem<'r>{
     pub message: &'r RawStr,
 }
 
-
-
 #[derive(FromForm, Debug)]
-pub struct RsaKeysItem<'r>{
+pub struct RsaKeysItem<'r> {
     pub length: &'r RawStr,
     pub mode: &'r RawStr,
 }
