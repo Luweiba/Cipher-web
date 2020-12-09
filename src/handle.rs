@@ -1,5 +1,4 @@
 use base64::{encode, decode};
-use urldecode::decode as url_decode;
 use rocket::request::Form;
 use block_modes::BlockMode;
 use crate::form::*;
@@ -19,6 +18,96 @@ use rand::thread_rng;
 use sha3::{Sha3_256, Digest};
 use sha3::digest::DynDigest;
 
+
+fn url_decode(data_in: String) -> String {
+    let mut output = String::new();
+    let data_vec = data_in.chars().collect::<Vec<char>>();
+    let mut character_vec = vec![];
+    let mut flag = false;
+    let mut index = 0;
+    while index < data_vec.len() {
+        let ch = data_vec[index];
+        if ch == '+' {
+            output.push(' ');
+            index += 1;
+        } else if ch == '%' {
+            let high_byte;
+            let low_byte;
+            if let Some(&byte) = data_vec.get(index+1) {
+                high_byte = byte;
+            } else {
+                if flag {
+                    if character_vec.len() == 1 {
+                        output.push(character_vec[0] as char);
+                    } else {
+                        output.push_str(&String::from_utf8(character_vec.clone()).unwrap());
+                    }
+                    character_vec.clear();
+                }
+                output.push(ch);
+                index += 1;
+                continue;
+            }
+            if let Some(&byte) = data_vec.get(index+2) {
+                low_byte = byte;
+            } else {
+                if flag {
+                    if character_vec.len() == 1 {
+                        output.push(character_vec[0] as char);
+                    } else {
+                        output.push_str(&String::from_utf8(character_vec.clone()).unwrap());
+                    }
+                    character_vec.clear();
+                }
+                output.push(ch);
+                index += 1;
+                continue;
+            }
+            if high_byte.is_ascii_hexdigit() && low_byte.is_ascii_hexdigit() {
+                let byte = (high_byte.to_digit(16).unwrap() * 16 + low_byte.to_digit(16).unwrap()) as u8;
+                if flag {
+                    character_vec.push(byte);
+                } else {
+                    flag = true;
+                    character_vec.push(byte);
+                }
+                index += 3;
+            } else {
+                if flag {
+                    if character_vec.len() == 1 {
+                        output.push(character_vec[0] as char);
+                    } else {
+                        output.push_str(&String::from_utf8(character_vec.clone()).unwrap());
+                    }
+                    character_vec.clear();
+                }
+                output.push(ch);
+                index += 1;
+                continue;
+            }
+        } else {
+            if flag {
+                if character_vec.len() == 1 {
+                    output.push(character_vec[0] as char);
+                } else {
+                    output.push_str(&String::from_utf8(character_vec.clone()).unwrap());
+                }
+                character_vec.clear();
+            }
+            output.push(ch);
+            index += 1;
+        }
+    }
+    if flag {
+        if character_vec.len() == 1 {
+            output.push(character_vec[0] as char);
+        } else {
+            output.push_str(&String::from_utf8(character_vec.clone()).unwrap());
+        }
+        character_vec.clear();
+    }
+    output
+}
 
 pub fn handle(encrypt_item: Form<EncryptItem>, flag: bool) -> Result<String, String> {
     if let Err(e) = encrypt_item.algorithm {
