@@ -24,8 +24,9 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8c2fa5f-5eb7-4e81-8069-97ca191a989f" name="Default Changelist" comment="patch the url_decode, Now it supports Chinese encrypt/decrypt.">
+    <list default="true" id="c8c2fa5f-5eb7-4e81-8069-97ca191a989f" name="Default Changelist" comment="rust fmt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handle.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/handle.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +65,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pingcap-talent-plan/kvs-project4" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="org.rust.disableDetachedFileInspectionD:/rsprojects/cipher-web-rocket/src/form.rs" value="true" />
@@ -127,7 +128,8 @@
       <workItem from="1607340100942" duration="11777000" />
       <workItem from="1607387605356" duration="19000" />
       <workItem from="1607502488731" duration="209000" />
-      <workItem from="1607520984433" duration="935000" />
+      <workItem from="1607520984433" duration="1394000" />
+      <workItem from="1607580855887" duration="433000" />
     </task>
     <task id="LOCAL-00001" summary="cipher_web 0.1.0">
       <created>1606360061340</created>
@@ -143,7 +145,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607521302671</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="rust fmt">
+      <created>1607522156744</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1607522156744</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,7 +175,8 @@
     <MESSAGE value="first" />
     <MESSAGE value="cipher_web 0.1.0" />
     <MESSAGE value="patch the url_decode, Now it supports Chinese encrypt/decrypt." />
-    <option name="LAST_COMMIT_MESSAGE" value="patch the url_decode, Now it supports Chinese encrypt/decrypt." />
+    <MESSAGE value="rust fmt" />
+    <option name="LAST_COMMIT_MESSAGE" value="rust fmt" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="56" key="#Plugins" timestamp="1605782202003">
@@ -177,10 +187,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="497" y="213" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1604369092289" />
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1607502697824">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1607581269823">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1607502697824" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1607581269823" />
     <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1605787841278">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -201,10 +211,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1604163604425" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1607521307399">
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1607522160476">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1607521307399" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1607522160476" />
     <state x="425" y="187" key="run.anything.popup" timestamp="1605093086261">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

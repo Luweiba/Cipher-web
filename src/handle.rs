@@ -132,15 +132,15 @@ pub fn handle(encrypt_item: Form<EncryptItem>, flag: bool) -> Result<String, Str
         return Err(format!("Error: Wrong Key Length!Expect {}", key_len));
     }
     let mut buffer = [0u8; 512];
-    println!("Raw: {}", encrypt_item.message);
+    //println!("Raw: {}", encrypt_item.message);
     let s = url_decode(encrypt_item.message.as_str().to_string());
-    println!("URL decode: {}", s);
+    //println!("URL decode: {}", s);
     let pos = s.as_bytes().len();
     buffer[..pos].copy_from_slice(s.as_bytes());
     let mut decrypt_buffer = vec![];
     if !flag {
         decrypt_buffer = decode(s.as_str()).unwrap();
-        println!("Base64 decode: {:?}", decrypt_buffer);
+        //println!("Base64 decode: {:?}", decrypt_buffer);
     }
     let ciphertext = match encrypt_item.algorithm.unwrap() {
         EncryptAlgorithm::DES => match encrypt_item.mode.unwrap() {
@@ -732,13 +732,13 @@ pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
         } else {
             signature = decode(data.to_string()).unwrap();
         }
-        println!("{}: {}", i, data);
+        //println!("{}: {}", i, data);
     }
     let mut hasher = Sha3_256::new();
     Digest::update(&mut hasher, raw_final_packet.as_bytes());
     let raw_final_packet_result = hasher.finalize();
     let raw_final_packet_result_slice = raw_final_packet_result.as_slice();
-    println!("Raw final packet: {:?}", raw_final_packet_result_slice);
+    //println!("Raw final packet: {:?}", raw_final_packet_result_slice);
     if public_key
         .verify(
             PaddingScheme::new_pkcs1v15_sign(None),
@@ -1212,7 +1212,7 @@ pub fn handle_sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String>
     Digest::update(&mut hasher, msg.as_bytes());
     let result = hasher.finalize();
     let result_slice = result.as_slice();
-    println!("{:?}", result_slice);
+    //println!("{:?}", result_slice);
     Ok(format!("{}", encode(result_slice)))
 }
 
@@ -1265,7 +1265,7 @@ pub fn handle_signature(signature_item: Form<SignatureItem>) -> Result<String, S
     } else {
         RSAPrivateKey::from_pkcs1(&der_bytes).unwrap()
     };
-    println!("Result_slice: {:?}", result_slice);
+    //println!("Result_slice: {:?}", result_slice);
     let signed_data = private_key
         .sign(PaddingScheme::new_pkcs1v15_sign(None), result_slice)
         .unwrap();
