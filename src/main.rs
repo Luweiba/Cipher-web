@@ -20,7 +20,6 @@ use form::*;
 use handle::*;
 use lfsr_jk::*;
 use rc4::*;
-
 use rand::rngs::OsRng;
 use rsa::PrivateKeyPemEncoding;
 use rsa::PublicKey;
@@ -165,13 +164,14 @@ fn rsa_crypt() -> Template {
     };
     Template::render("rsa_crypt", &context)
 }
-
+/// 处理404错误
 #[catch(404)]
 fn not_found(req: &Request<'_>) -> Template {
     let mut map = HashMap::new();
     map.insert("path", req.uri().path());
     Template::render("error/404", &map)
 }
+/// 主函数
 fn main() {
     let mut primes = Primes::new();
     primes.update_primes(10000);

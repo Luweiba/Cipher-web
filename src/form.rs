@@ -1,3 +1,4 @@
+//！ 定义POST表单类型的数据结构
 use rocket::http::RawStr;
 use rocket::request::{FromForm, FromFormValue};
 

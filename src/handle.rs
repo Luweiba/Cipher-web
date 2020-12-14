@@ -1,3 +1,5 @@
+//！ 服务层函数
+
 use crate::cipher_type::*;
 use crate::form::*;
 use crate::lfsr_jk::LfsrJk;
@@ -17,7 +19,7 @@ use sha3::digest::DynDigest;
 use sha3::{Digest, Sha3_256};
 use std::convert::TryFrom;
 use std::sync::{Arc, Mutex};
-
+/// 用于将URL中的标点符号与中文解码
 fn url_decode(data_in: String) -> String {
     let mut output = String::new();
     let data_vec = data_in.chars().collect::<Vec<char>>();
@@ -108,7 +110,7 @@ fn url_decode(data_in: String) -> String {
     }
     output
 }
-
+/// 处理AES与DES算法
 pub fn handle(encrypt_item: Form<EncryptItem>, flag: bool) -> Result<String, String> {
     if let Err(e) = encrypt_item.algorithm {
         return Err(format!("Error: {}", e));
@@ -132,15 +134,12 @@ pub fn handle(encrypt_item: Form<EncryptItem>, flag: bool) -> Result<String, Str
         return Err(format!("Error: Wrong Key Length!Expect {}", key_len));
     }
     let mut buffer = [0u8; 512];
-    //println!("Raw: {}", encrypt_item.message);
     let s = url_decode(encrypt_item.message.as_str().to_string());
-    //println!("URL decode: {}", s);
     let pos = s.as_bytes().len();
     buffer[..pos].copy_from_slice(s.as_bytes());
     let mut decrypt_buffer = vec![];
     if !flag {
         decrypt_buffer = decode(s.as_str()).unwrap();
-        //println!("Base64 decode: {:?}", decrypt_buffer);
     }
     let ciphertext = match encrypt_item.algorithm.unwrap() {
         EncryptAlgorithm::DES => match encrypt_item.mode.unwrap() {
@@ -650,7 +649,7 @@ pub fn handle(encrypt_item: Form<EncryptItem>, flag: bool) -> Result<String, Str
         Ok(String::from_utf8(ciphertext.to_vec()).unwrap())
     }
 }
-
+/// 处理RSA的加解密
 pub fn rsa_handle(rsa_crypt_item: Form<RsaCryptItem>, encrypt: bool) -> Result<String, String> {
     let keys = url_decode(rsa_crypt_item.keys.to_string());
     let message = url_decode(rsa_crypt_item.message.to_string());
@@ -706,7 +705,7 @@ pub fn rsa_handle(rsa_crypt_item: Form<RsaCryptItem>, encrypt: bool) -> Result<S
         Ok(String::from_utf8(dec_data).unwrap())
     }
 }
-
+// 处理
 pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
     let public_key = url_decode(dh_item.public_key.to_string());
     let final_packet = url_decode(dh_item.final_packet.to_string());
@@ -732,13 +731,11 @@ pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
         } else {
             signature = decode(data.to_string()).unwrap();
         }
-        //println!("{}: {}", i, data);
     }
     let mut hasher = Sha3_256::new();
     Digest::update(&mut hasher, raw_final_packet.as_bytes());
     let raw_final_packet_result = hasher.finalize();
     let raw_final_packet_result_slice = raw_final_packet_result.as_slice();
-    //println!("Raw final packet: {:?}", raw_final_packet_result_slice);
     if public_key
         .verify(
             PaddingScheme::new_pkcs1v15_sign(None),
@@ -798,7 +795,7 @@ pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
     let shared_k = fast_mod(Ya, B, p);
     Ok(format!("{}```{}&&&{}", Yb, shared_k, B))
 }
-
+/// 仿射加密处理函数
 pub fn affine_handle(
     affine_crypt_item: Form<AffineCryptItem>,
     flag: bool,
@@ -936,7 +933,7 @@ pub fn affine_handle(
         return Ok(ans);
     }
 }
-
+/// 扩展欧几里得算法
 fn exgcd(a: i32, m: i32) -> i32 {
     let mut a = a;
     let mut b = m;
@@ -962,7 +959,7 @@ fn exgcd(a: i32, m: i32) -> i32 {
     }
     return s1;
 }
-
+/// 求最大公因数
 fn gcd(a: u32, b: u32) -> u32 {
     if b == 0 {
         a
@@ -970,7 +967,7 @@ fn gcd(a: u32, b: u32) -> u32 {
         gcd(b, a % b)
     }
 }
-
+/// 处理RC4加密算法
 pub fn rc4_handle(rc4_crypt_item: Form<Rc4CryptItem>) -> Result<String, String> {
     let mut key = rc4_crypt_item.key.to_string();
     let mut k = Vec::from(key.as_bytes());
@@ -993,6 +990,7 @@ pub fn rc4_handle(rc4_crypt_item: Form<Rc4CryptItem>) -> Result<String, String> 
         return Ok(String::from_utf8(buffer[..pos].to_vec()).unwrap());
     }
 }
+/// 处理LFSR-JK触发器流密码加密
 pub fn lfsr_jk_handle(lfsr_jk_item: Form<LfsrJkItem>, flag: bool) -> Result<String, String> {
     let mut j_state;
     let mut k_state;
@@ -1049,7 +1047,7 @@ pub fn lfsr_jk_handle(lfsr_jk_item: Form<LfsrJkItem>, flag: bool) -> Result<Stri
         return Ok(String::from_utf8(buffer[..pos].to_vec()).unwrap());
     }
 }
-
+/// 用于处理素数产生
 #[derive(Debug)]
 pub struct Primes {
     primes: Vec<u32>,
@@ -1129,6 +1127,7 @@ impl Primes {
         self.primes[rand_idx]
     }
 }
+/// 快速模运算
 pub fn fast_mod(n: u32, p: u32, m: u32) -> u32 {
     let mut scale = n % m;
     let mut ans = 1;
@@ -1142,13 +1141,13 @@ pub fn fast_mod(n: u32, p: u32, m: u32) -> u32 {
     }
     ans
 }
+/// 根据因式分解的结果得出所有的因子
 pub fn get_factors(factors: Vec<(u32, u32)>) -> Vec<u32> {
     let (factors, factor_exp): (Vec<u32>, Vec<u32>) = factors.into_iter().unzip();
     let n = factor_exp.iter().fold(1, |mut ans, item| {
         ans *= *item + 1;
         ans
     });
-    // println!("n: {}", n);
     let mut count = vec![0; factors.len()];
     let mut factor;
     let mut ans = vec![];
@@ -1172,6 +1171,7 @@ pub fn get_factors(factors: Vec<(u32, u32)>) -> Vec<u32> {
     ans.sort();
     ans
 }
+/// 随机获取一个素数p的本原根
 pub fn get_one_origin_primitive_root(primes: &mut Primes, p: u32) -> u32 {
     let mut ans = 0;
     let factors = primes.decompose(p - 1);
@@ -1197,7 +1197,7 @@ pub fn get_one_origin_primitive_root(primes: &mut Primes, p: u32) -> u32 {
     }
     ans
 }
-
+// 处理Diffie-Hellman协议的快速生成素数与本原根
 pub fn handle_diffie_hellman_generate(primes: State<Mutex<Primes>>) -> Result<String, String> {
     let mut primes = primes.lock().unwrap();
     let p = primes.get_a_prime();
@@ -1205,7 +1205,7 @@ pub fn handle_diffie_hellman_generate(primes: State<Mutex<Primes>>) -> Result<St
     let a = (random::<u32>() % (p - 1)) + 1;
     Ok(format!("{}```{}&&&{}", p, g, a))
 }
-
+/// 用SHA-3哈希算法生成报文完整码
 pub fn handle_sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String> {
     let msg = sha3_hash_item.msg.to_string();
     let mut hasher = Sha3_256::new();
@@ -1215,7 +1215,7 @@ pub fn handle_sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String>
     //println!("{:?}", result_slice);
     Ok(format!("{}", encode(result_slice)))
 }
-
+/// 用RSA私钥进行签名
 pub fn handle_signature(signature_item: Form<SignatureItem>) -> Result<String, String> {
     let p;
     let g;
@@ -1265,7 +1265,6 @@ pub fn handle_signature(signature_item: Form<SignatureItem>) -> Result<String, S
     } else {
         RSAPrivateKey::from_pkcs1(&der_bytes).unwrap()
     };
-    //println!("Result_slice: {:?}", result_slice);
     let signed_data = private_key
         .sign(PaddingScheme::new_pkcs1v15_sign(None), result_slice)
         .unwrap();

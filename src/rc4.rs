@@ -1,3 +1,5 @@
+//！ RC4加密算法实现
+
 #[derive(Debug)]
 pub struct Rc4 {
     s: [u32; 256],
