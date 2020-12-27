@@ -746,7 +746,7 @@ pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
     {
         return Err(format!("Error: Signature Verification Failed"));
     }
-    let mut Ya: u32 = 0;
+    let mut ya: u32 = 0;
     let mut p: u32 = 0;
     let mut g: u32 = 0;
     let mut mac = String::new();
@@ -768,7 +768,7 @@ pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
             }
             2 => {
                 if let Ok(tmp) = item.parse::<u32>() {
-                    Ya = tmp;
+                    ya = tmp;
                 } else {
                     return Err(format!("Error: Can't parse {} to Unsigned Integer", item));
                 }
@@ -783,17 +783,17 @@ pub fn dh_handle(dh_item: Form<DHItem>) -> Result<String, String> {
     }
     let mac = decode(mac).unwrap();
     let mut hasher = Sha3_256::new();
-    Digest::update(&mut hasher, Ya.to_string().as_bytes());
+    Digest::update(&mut hasher, ya.to_string().as_bytes());
     let raw_mac_result = hasher.finalize();
     let raw_mac_result_slice = raw_mac_result.as_slice();
     let new_mac = Vec::from(raw_mac_result_slice);
     if new_mac != mac {
         return Err(format!("Error: Mac failed"));
     }
-    let B = random::<u32>() % (p - 1) + 1;
-    let Yb = fast_mod(g, B, p);
-    let shared_k = fast_mod(Ya, B, p);
-    Ok(format!("{}```{}&&&{}", Yb, shared_k, B))
+    let b = random::<u32>() % (p - 1) + 1;
+    let yb = fast_mod(g, b, p);
+    let shared_k = fast_mod(ya, b, p);
+    Ok(format!("{}```{}&&&{}", yb, shared_k, b))
 }
 /// 仿射加密处理函数
 pub fn affine_handle(
@@ -1219,7 +1219,7 @@ pub fn handle_sha3(sha3_hash_item: Form<Sha3HashItem>) -> Result<String, String>
 pub fn handle_signature(signature_item: Form<SignatureItem>) -> Result<String, String> {
     let p;
     let g;
-    let Ya;
+    let ya;
     let private_key = url_decode(signature_item.private_key.to_string());
     let mac = url_decode(signature_item.mac.to_string());
     if let Ok(tmp) = signature_item.p.parse::<u64>() {
@@ -1238,15 +1238,15 @@ pub fn handle_signature(signature_item: Form<SignatureItem>) -> Result<String, S
             signature_item.g
         ));
     }
-    if let Ok(tmp) = signature_item.Ya.parse::<u64>() {
-        Ya = tmp;
+    if let Ok(tmp) = signature_item.ya.parse::<u64>() {
+        ya = tmp;
     } else {
         return Err(format!(
-            "Error: can't convert Ya to integer, your Ya is {}",
-            signature_item.Ya
+            "Error: can't convert ya to integer, your ya is {}",
+            signature_item.ya
         ));
     }
-    let mut final_packet = format!("{}`{}`{}`{}", p, g, Ya, mac);
+    let mut final_packet = format!("{}`{}`{}`{}", p, g, ya, mac);
     let mut hasher = Sha3_256::new();
     Digest::update(&mut hasher, final_packet.as_bytes());
     let result = hasher.finalize();

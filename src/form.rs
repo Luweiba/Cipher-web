@@ -140,7 +140,7 @@ pub struct Sha3HashItem<'r> {
 pub struct SignatureItem<'r> {
     pub p: &'r RawStr,
     pub g: &'r RawStr,
-    pub Ya: &'r RawStr,
+    pub ya: &'r RawStr,
     pub private_key: &'r RawStr,
     pub mac: &'r RawStr,
     pub mode: &'r RawStr,
